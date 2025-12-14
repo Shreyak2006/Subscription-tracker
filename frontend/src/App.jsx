@@ -9,10 +9,20 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [editingSubscription, setEditingSubscription] = useState(null);
 
+  // const loadSubscriptions = async () => {
+  //   try {
+  //     const res = await fetchSubscriptions();
+  //     setSubscriptions(res.data || []);
+  //   } catch (error) {
+  //     console.error(error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
   const loadSubscriptions = async () => {
     try {
-      const data = await fetchSubscriptions();
-      setSubscriptions(data || []);
+      const res = await fetchSubscriptions();
+      setSubscriptions(res || []); // ✅ FIX HERE
     } catch (error) {
       console.error(error);
     } finally {
@@ -24,28 +34,46 @@ function App() {
     loadSubscriptions();
   }, []);
 
+  // const handleAdd = async (sub) => {
+  //   try {
+  //     const res = await addSubscription(sub);
+  //     if (res) {
+  //       loadSubscriptions();
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+
   const handleAdd = async (sub) => {
     try {
-      const res = await addSubscription(sub);
-      if (res.code === 200) {
-        loadSubscriptions();
-      }
+      await addSubscription(sub);   // just wait
+      loadSubscriptions();          // always reload
     } catch (error) {
       console.error(error);
     }
   };
 
+  // const handleUpdate = async (id, sub) => {
+  //   try {
+  //     const res = await updateSubscription(id, sub);
+  //     if (res) {
+  //       loadSubscriptions();
+  //       setEditingSubscription(null);
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
   const handleUpdate = async (id, sub) => {
     try {
-      const res = await updateSubscription(id, sub);
-      if (res.code === 200) {
-        loadSubscriptions();
-        setEditingSubscription(null);
-      }
+      await updateSubscription(id, sub);  // no res check
+      loadSubscriptions();
+      setEditingSubscription(null);
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   const handleDelete = async (id) => {
     try {

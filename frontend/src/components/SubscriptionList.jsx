@@ -1,7 +1,20 @@
-import React, { useState } from 'react';
+// import React, { useState } from 'react';
+// import { deleteSubscription } from "../api";
+// import { useEffect, useState } from "react";
+// import { fetchSubscriptions } from "../api";
+import React, { useEffect, useState } from "react";
+import { fetchSubscriptions, deleteSubscription } from "../api";
 
 const SubscriptionList = ({ subscriptions, onDelete, onEdit }) => {
     const [searchTerm, setSearchTerm] = useState('');
+    const handleDelete = async (id) => {
+        try {
+            await deleteSubscription(id);
+            onDelete(id);
+        } catch (error) {
+            alert("Delete failed");
+        }
+    };
 
     const filteredSubscriptions = subscriptions.filter(sub =>
         sub.name.toLowerCase().includes(searchTerm.toLowerCase()) ||

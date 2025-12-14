@@ -25,17 +25,20 @@ const SubscriptionForm = ({ onAdd, onUpdate, editingSubscription, onCancelEdit }
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const subData = { ...form, cost: parseFloat(form.cost) };
 
-        if (editingSubscription) {
-            onUpdate(editingSubscription.id, subData);
-        } else {
-            onAdd(subData);
+        try {
+            if (editingSubscription) {
+                await onUpdate(editingSubscription.id, subData);
+            } else {
+                await onAdd(subData);
+            }
+            clearForm();
+        } catch (error) {
+            console.error("Failed to save subscription", error);
         }
-
-        clearForm();
     };
 
     const clearForm = () => {
